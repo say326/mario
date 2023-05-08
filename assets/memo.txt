@@ -1,0 +1,12 @@
+
+world -世界
+    bodies -物体
+        mass -质量
+        velocity -速度
+        location -位置
+        angles -角度
+        fixtures -固定属性
+            shape -形状
+            density -密度
+            friction -摩擦力
+            restitution -反弹系数
