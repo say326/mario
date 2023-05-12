@@ -1,27 +1,44 @@
 package com.mygdx.mariobros.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.mariobros.MarioBros;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.mygdx.mariobros.config.BitDefinition;
 import com.mygdx.mariobros.scenes.Hud;
+import com.mygdx.mariobros.screens.GameScreen;
 
+/**
+ * 砖块类，继承自InteractiveTileObject
+ */
 public class Brick extends InteractiveTileObject {
 
-    public Brick(World world, TiledMap map, Rectangle bounds) {
-        super(world, map, bounds);
+    /**
+     * 砖块被摧毁时所能获取到的分数
+     */
+    private static final int DESTROY_SCORE = 200;
+
+    /**
+     * 构造函数，初始化Brick实例。
+     *
+     * @param screen GameScreen实例，硬币所在的游戏屏幕
+     * @param bounds Rectangle实例，硬币所在的矩形范围
+     */
+    public Brick(final GameScreen screen, final RectangleMapObject bounds) {
+        super(screen, bounds);
         fixture.setUserData(this);
-        setCategoryFilter(MarioBros.BRICK_BIT);
+        setCategoryFilter(BitDefinition.BRICK_BIT);
     }
 
+    /**
+     * 处理头部碰撞事件，当玩家头部碰撞到砖块时被调用。
+     */
     @Override
     public void onHeadHit() {
-        Gdx.app.log("LOG NOW...", "mario's head is hitting brick now");
-        setCategoryFilter(MarioBros.DESTROYED_BIT);
+        setCategoryFilter(BitDefinition.DESTROYED_BIT);
         getCell().setTile(null);
-        Hud.getScore(200);
-        MarioBros.assetManager.get("audio/sounds/breakblock.wav", Sound.class).play();
+        Hud.getScore(DESTROY_SCORE);
+        game.getAssetManager()
+            .get("audio/sounds/breakblock.wav", Sound.class)
+            .play();
     }
 }
+

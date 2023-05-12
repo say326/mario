@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.mariobros.MarioBros;
+import com.mygdx.mariobros.config.BitDefinition;
+import com.mygdx.mariobros.config.GraphicsConfig;
 import com.mygdx.mariobros.enums.States;
 import com.mygdx.mariobros.screens.GameScreen;
 
@@ -68,12 +69,10 @@ public class Mario extends Sprite {
 
     /**
      * 构造函数，用于初始化马里奥的物理刚体
-     *
-     * @param world Box2D世界对象
      */
-    public Mario(World world, GameScreen gameScreen) {
+    public Mario(GameScreen gameScreen) {
         super(gameScreen.getAtlas().findRegion("little_mario"));
-        this.world = world;
+        this.world = gameScreen.getWorld();
 
         // 设置初始状态为STANDING，计时器为0，纹理面向右侧
         currentState = States.STANDING;
@@ -94,7 +93,7 @@ public class Mario extends Sprite {
         defineMario();
 
         // 设置Mario的边界和初始纹理
-        setBounds(0, 0, 16 / MarioBros.PPM, 16 / MarioBros.PPM);
+        setBounds(0, 0, 16 / GraphicsConfig.PPM, 16 / GraphicsConfig.PPM);
         setRegion(marioStand);
     }
 
@@ -186,7 +185,7 @@ public class Mario extends Sprite {
     private void defineMario() {
         // 创建一个物体定义（BodyDef），用于描述物体的物理属性
         final BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(32 / MarioBros.PPM, 32 / MarioBros.PPM); // 设置物体的初始位置
+        bodyDef.position.set(32 / GraphicsConfig.PPM, 32 / GraphicsConfig.PPM); // 设置物体的初始位置
         bodyDef.type = BodyDef.BodyType.DynamicBody; // 设置物体为动态刚体，即可被物理引擎模拟
 
         // 创建物理刚体并添加到Box2D世界中
@@ -197,9 +196,9 @@ public class Mario extends Sprite {
 
         // 创建一个圆形的形状
         final CircleShape shape = new CircleShape();
-        shape.setRadius(5 / MarioBros.PPM); // 设置半径
-        fixtureDef.filter.categoryBits = MarioBros.MARIO_BIT;
-        fixtureDef.filter.maskBits = MarioBros.DEFAULT_BIT | MarioBros.BRICK_BIT | MarioBros.COIN_BIT;
+        shape.setRadius(5 / GraphicsConfig.PPM); // 设置半径
+        fixtureDef.filter.categoryBits = BitDefinition.MARIO_BIT;
+        fixtureDef.filter.maskBits = BitDefinition.OBJECT_BIT | BitDefinition.BRICK_BIT | BitDefinition.COIN_BIT;
 
         // 将圆形形状赋给 FixtureDef
         fixtureDef.shape = shape;
@@ -208,7 +207,7 @@ public class Mario extends Sprite {
         body.createFixture(fixtureDef);
 
         final EdgeShape head = new EdgeShape();
-        head.set(new Vector2(-2 / MarioBros.PPM, 5 / MarioBros.PPM), new Vector2(2 / MarioBros.PPM, 5 / MarioBros.PPM));
+        head.set(new Vector2(-2 / GraphicsConfig.PPM, 5 / GraphicsConfig.PPM), new Vector2(2 / GraphicsConfig.PPM, 5 / GraphicsConfig.PPM));
         fixtureDef.shape = head;
         fixtureDef.isSensor = true;
 
