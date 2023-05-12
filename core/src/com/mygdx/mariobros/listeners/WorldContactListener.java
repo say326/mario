@@ -14,29 +14,20 @@ public class WorldContactListener implements ContactListener {
     private static final String HEAD_TAG = "head";
 
     /**
-     * 获取被碰撞物体
-     *
-     * @param contact  碰撞接触对象
-     * @return {@link Object} 被碰撞物体
-     */
-    private Object getObject(final Contact contact) {
-        final Fixture fixtureA = contact.getFixtureA();
-        final Fixture fixtureB = contact.getFixtureB();
-        return fixtureA.getUserData() == HEAD_TAG
-            ? fixtureB.getUserData()
-            : fixtureA.getUserData();
-    }
-
-    /**
      * 处理碰撞事件
      *
-     * @param contact  碰撞接触对象
+     * @param contact 碰撞接触对象
      */
     @Override
     public void beginContact(final Contact contact) {
-        final Object object = getObject(contact);
-        if (object instanceof InteractiveTileObject) {
-            ((InteractiveTileObject) object).onHeadHit();
+        final Fixture fixtureA = contact.getFixtureA();
+        final Fixture fixtureB = contact.getFixtureB();
+        if (fixtureA.getUserData() == HEAD_TAG || fixtureB.getUserData() == HEAD_TAG) {
+            final Fixture object = fixtureA.getUserData().equals(HEAD_TAG) ? fixtureB : fixtureA;
+            final Object userData = object.getUserData();
+            if (userData != null && InteractiveTileObject.class.isAssignableFrom(userData.getClass())){
+                ((InteractiveTileObject) userData).onHeadHit();
+            }
         }
     }
 
